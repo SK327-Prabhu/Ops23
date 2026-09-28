@@ -1,0 +1,10 @@
+# Ops23 Infrastructure Example Variables
+# Copy this file to terraform.tfvars to customize your deployment.
+# Note: AWS credentials should NOT be stored here. Use standard AWS credential chain (AWS CLI / environment variables).
+
+aws_region    = "us-east-1"
+project_name  = "ops23"
+environment   = "dev"
+instance_type = "t3.micro"
+ami_id        = "" # Leave empty to automatically use the latest official Amazon Linux 2023 AMI
+app_port      = 8000

@@ -1,0 +1,43 @@
+[Unit]
+Description=Ops23 FastAPI Application Service (AIOps Workload)
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ops23
+Group=ops23
+WorkingDirectory=/opt/ops23
+
+# Environment and Path
+Environment="PATH=/opt/ops23/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+Environment="PYTHONUNBUFFERED=1"
+Environment="ENVIRONMENT=production"
+Environment="HOST=0.0.0.0"
+Environment="PORT=8000"
+Environment="SERVICE_NAME=Ops23"
+Environment="APP_NAME=Ops23 API"
+EnvironmentFile=-/opt/ops23/.env
+
+# Application execution using virtual environment uvicorn
+ExecStart=/opt/ops23/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2 --log-level info
+
+# Automatic recovery and lifecycle
+Restart=always
+RestartSec=5s
+KillSignal=SIGTERM
+TimeoutStopSec=15s
+FinalKillSignal=SIGKILL
+
+# Logging configuration (journald with structured JSON preservation for Datadog)
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ops23
+
+# Security hardening
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
