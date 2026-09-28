@@ -29,9 +29,8 @@ cd /tmp
 sudo chmod +x scripts/install_ec2.sh
 sudo ./scripts/install_ec2.sh
 ```
-
 ### What the Script Performs Idempotently:
-1. Installs Python 3.12 and pip via `dnf install -y python3.12 python3.12-pip curl`.
+1. Installs Python 3.12 and pip via `dnf install -y python3.12 python3.12-pip` (relying on pre-installed `curl-minimal` in Amazon Linux 2023 to avoid package conflicts).
 2. Creates the non-privileged system user `ops23` with no login shell (`/sbin/nologin`).
 3. Creates the target directory `/opt/ops23` and log directory `/var/log/ops23`.
 4. Copies `app/` and `requirements.txt` to `/opt/ops23`.

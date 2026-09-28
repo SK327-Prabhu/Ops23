@@ -26,9 +26,11 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # 2. Install Python 3.12 and dependencies on Amazon Linux 2023
+# Note: Amazon Linux 2023 includes curl-minimal by default. Installing the full 'curl'
+# package causes a package manager conflict, so we only install Python 3.12 and pip.
 echo "--> Installing Python 3.12 and runtime dependencies via dnf..."
 dnf check-update || true
-dnf install -y python3.12 python3.12-pip curl
+dnf install -y python3.12 python3.12-pip
 
 # 3. Create dedicated system user and group (least-privilege)
 if ! id -u "${APP_USER}" &>/dev/null; then
@@ -67,6 +69,9 @@ chmod 755 "${APP_DIR}"
 # 8. Install and configure systemd service
 echo "--> Installing systemd unit file..."
 SERVICE_SOURCE="${REPO_ROOT}/infrastructure/systemd/${SERVICE_NAME}"
+if [[ ! -f "${SERVICE_SOURCE}" && -f "${SCRIPT_DIR}/${SERVICE_NAME}" ]]; then
+    SERVICE_SOURCE="${SCRIPT_DIR}/${SERVICE_NAME}"
+fi
 
 if [[ ! -f "${SERVICE_SOURCE}" ]]; then
     echo "[ERROR] Service unit file not found at ${SERVICE_SOURCE}" >&2
