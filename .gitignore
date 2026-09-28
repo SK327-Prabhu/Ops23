@@ -92,3 +92,6 @@ datadog*.yaml
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Terraform plan files
+*.tfplan
